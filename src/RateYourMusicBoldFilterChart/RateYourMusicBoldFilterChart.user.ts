@@ -1,7 +1,7 @@
 import { createStylesheet } from "userscript-utils";
 
 const BOLD_CLASS = "is_bolded";
-const INSERT_CONTAINER_AFTER_CLASS = "page_chart_settings_summary";
+const INSERT_CONTAINER_AFTER_CLASS = "page_charts_settings_summary";
 const CHECKBOX_ID = "showOnlyBolds";
 const WRAPPER_ID = `${CHECKBOX_ID}_container`;
 const SECTION_ID = "page_charts_section_charts";
