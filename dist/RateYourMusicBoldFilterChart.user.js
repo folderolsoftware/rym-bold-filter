@@ -92,10 +92,6 @@ class RateYourMusicBoldFilter {
           content: 'Hidden by Bold Filter';
           font-style: italic;
         }
-
-        .${SHOW_PLACEHOLDER_CLASS} .${FAKE_CHART_ITEM_CLASS} {
-          display: none;
-        }
     `);
     }
     createContainer() {
@@ -248,11 +244,11 @@ class RateYourMusicBoldFilter {
             // do nothing
         }
         const fakeChartItem = document.querySelector(`.${FAKE_CHART_ITEM_CLASS}`);
-        const showFakeChartItem = !this.showPlaceholders && releases.every((release) => release.classList.contains(FILTERED_CLASS) ||
+        const showFakeChartItem = releases.every((release) => release.classList.contains(FILTERED_CLASS) ||
             release.classList.contains(FAKE_CHART_ITEM_CLASS));
         this.applyClass(fakeChartItem, showFakeChartItem, FORCE_DISPLAY_BLOCK_CLASS);
         const releaseSection = document.getElementById(SECTION_ID);
-        this.applyClass(releaseSection, this.showPlaceholders, SHOW_PLACEHOLDER_CLASS);
+        this.applyClass(releaseSection, this.showPlaceholders && !showFakeChartItem, SHOW_PLACEHOLDER_CLASS);
     }
     main() {
         return __awaiter(this, void 0, void 0, function* () {
