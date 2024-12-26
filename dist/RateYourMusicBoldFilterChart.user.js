@@ -84,7 +84,8 @@ class RateYourMusicBoldFilter {
           display: block;
         }
 
-        .${SHOW_PLACEHOLDER_CLASS} .${FILTERED_CLASS} .object_release > *:not(.number_main) {
+        .${SHOW_PLACEHOLDER_CLASS} .${FILTERED_CLASS} .object_release > *:not(.number_main),
+        .${SHOW_PLACEHOLDER_CLASS} .${FAKE_CHART_ITEM_CLASS} {
           display: none;
         }
 
