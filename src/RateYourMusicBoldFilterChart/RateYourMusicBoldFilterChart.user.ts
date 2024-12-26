@@ -64,10 +64,6 @@ class RateYourMusicBoldFilter {
           content: 'Hidden by Bold Filter';
           font-style: italic;
         }
-
-        .${SHOW_PLACEHOLDER_CLASS} .${FAKE_CHART_ITEM_CLASS} {
-          display: none;
-        }
     `);
   }
 
@@ -296,7 +292,7 @@ class RateYourMusicBoldFilter {
       `.${FAKE_CHART_ITEM_CLASS}`
     ) as HTMLDivElement;
 
-    const showFakeChartItem = !this.showPlaceholders && releases.every(
+    const showFakeChartItem = releases.every(
       (release) =>
         release.classList.contains(FILTERED_CLASS) ||
         release.classList.contains(FAKE_CHART_ITEM_CLASS)
@@ -310,7 +306,7 @@ class RateYourMusicBoldFilter {
 
     const releaseSection = document.getElementById(SECTION_ID) as HTMLElement;
     
-    this.applyClass(releaseSection, this.showPlaceholders, SHOW_PLACEHOLDER_CLASS);
+    this.applyClass(releaseSection, this.showPlaceholders && !showFakeChartItem, SHOW_PLACEHOLDER_CLASS);
   }
 
   async main(): Promise<void> {
