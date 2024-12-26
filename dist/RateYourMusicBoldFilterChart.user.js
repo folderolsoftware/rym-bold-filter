@@ -41,6 +41,7 @@ const RADIO_GROUP_NAME = 'folderol_bold_filter';
 const FILTER_STATE_KEY = 'folderol_filter_state';
 const FAKE_CHART_ITEM_CLASS = 'folderol_fake_chart_item';
 const FORCE_DISPLAY_BLOCK_CLASS = 'folderol_force_display_block';
+const SHOW_PLACEHOLDER_CHECKBOX_ID = 'folderol_show_placeholder';
 var FilterState;
 (function (FilterState) {
     FilterState["Off"] = "off";
@@ -86,6 +87,7 @@ class RateYourMusicBoldFilter {
         wrapper.appendChild(header);
         const radioGroup = this.createRadioGroup();
         wrapper.appendChild(radioGroup);
+        wrapper.appendChild(this.createShowPlaceholderCheckbox());
         if (insertAfter) {
             const { parentNode, nextSibling } = insertAfter;
             if (nextSibling) {
@@ -153,6 +155,12 @@ class RateYourMusicBoldFilter {
         wrapper.appendChild(input);
         wrapper.appendChild(label);
         return wrapper;
+    }
+    createShowPlaceholderCheckbox() {
+        const input = document.createElement('input');
+        input.setAttribute('id', SHOW_PLACEHOLDER_CHECKBOX_ID);
+        input.setAttribute('type', 'checkbox');
+        return input;
     }
     isBold(release) {
         return release.classList.contains(BOLD_CLASS);

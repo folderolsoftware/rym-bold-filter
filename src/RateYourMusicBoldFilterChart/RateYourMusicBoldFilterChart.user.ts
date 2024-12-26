@@ -8,16 +8,17 @@ const SECTION_ID = "page_charts_section_charts";
 const RELEASE_CLASS = "page_section_charts_item_wrapper";
 const ITEM_CLASS = "page_charts_section_charts_item";
 
-const FILTERED_CLASS = 'folderol_filtered';
-const RADIO_GROUP_NAME = 'folderol_bold_filter';
-const FILTER_STATE_KEY = 'folderol_filter_state';
-const FAKE_CHART_ITEM_CLASS = 'folderol_fake_chart_item';
-const FORCE_DISPLAY_BLOCK_CLASS = 'folderol_force_display_block';
+const FILTERED_CLASS = "folderol_filtered";
+const RADIO_GROUP_NAME = "folderol_bold_filter";
+const FILTER_STATE_KEY = "folderol_filter_state";
+const FAKE_CHART_ITEM_CLASS = "folderol_fake_chart_item";
+const FORCE_DISPLAY_BLOCK_CLASS = "folderol_force_display_block";
+const SHOW_PLACEHOLDER_CHECKBOX_ID = "folderol_show_placeholder";
 
 enum FilterState {
-  Off = 'off',
-  BoldOnly = 'boldOnly',
-  NonBoldOnly = 'nonBoldOnly'
+  Off = "off",
+  BoldOnly = "boldOnly",
+  NonBoldOnly = "nonBoldOnly",
 }
 
 class RateYourMusicBoldFilter {
@@ -58,13 +59,15 @@ class RateYourMusicBoldFilter {
 
     wrapper.setAttribute("id", WRAPPER_ID);
 
-    const header = document.createElement('b');
-    header.textContent = 'Bold Filter';
+    const header = document.createElement("b");
+    header.textContent = "Bold Filter";
 
     wrapper.appendChild(header);
 
     const radioGroup = this.createRadioGroup();
     wrapper.appendChild(radioGroup);
+
+    wrapper.appendChild(this.createShowPlaceholderCheckbox());
 
     if (insertAfter) {
       const { parentNode, nextSibling } = insertAfter;
@@ -84,22 +87,27 @@ class RateYourMusicBoldFilter {
       return;
     }
 
-    const wrapper = document.createElement('div');
+    const wrapper = document.createElement("div");
     wrapper.classList.add(ITEM_CLASS, FAKE_CHART_ITEM_CLASS, FILTERED_CLASS);
-    wrapper.textContent = 'Bold Filter: Nothing to see here!'
+    wrapper.textContent = "Bold Filter: Nothing to see here!";
 
     const parent = document.getElementById(SECTION_ID);
     parent?.appendChild(wrapper);
   }
 
   createPaginationObserver(): MutationObserver {
-    const node = document.getElementById('page_charts_section_charts') as Node;
-    const observeConfig: MutationObserverInit = { childList: true, subtree: true};
+    const node = document.getElementById("page_charts_section_charts") as Node;
+    const observeConfig: MutationObserverInit = {
+      childList: true,
+      subtree: true,
+    };
 
     const callback: MutationCallback = () => {
       this.createFakeChartItem();
 
-      const checked = document.querySelector(`input[name=${RADIO_GROUP_NAME}]:checked`) as HTMLInputElement;
+      const checked = document.querySelector(
+        `input[name=${RADIO_GROUP_NAME}]:checked`
+      ) as HTMLInputElement;
 
       if (checked) {
         this.refilter(checked.value as FilterState);
@@ -113,11 +121,19 @@ class RateYourMusicBoldFilter {
   }
 
   createRadioGroup(): HTMLFieldSetElement {
-    const wrapper = document.createElement('fieldset');
+    const wrapper = document.createElement("fieldset");
 
-    const off = this.createRadioInput(RADIO_GROUP_NAME, FilterState.Off, 'Off');
-    const onlyBold = this.createRadioInput(RADIO_GROUP_NAME, FilterState.BoldOnly, 'Show Only Bolds');
-    const onlyNonBold = this.createRadioInput(RADIO_GROUP_NAME, FilterState.NonBoldOnly, 'Show Only Non-Bolds');
+    const off = this.createRadioInput(RADIO_GROUP_NAME, FilterState.Off, "Off");
+    const onlyBold = this.createRadioInput(
+      RADIO_GROUP_NAME,
+      FilterState.BoldOnly,
+      "Show Only Bolds"
+    );
+    const onlyNonBold = this.createRadioInput(
+      RADIO_GROUP_NAME,
+      FilterState.NonBoldOnly,
+      "Show Only Non-Bolds"
+    );
 
     wrapper.appendChild(off);
     wrapper.appendChild(onlyBold);
@@ -126,15 +142,19 @@ class RateYourMusicBoldFilter {
     return wrapper;
   }
 
-  createRadioInput(name: string, value: FilterState, displayValue: string): HTMLDivElement {
-    const wrapper = document.createElement('div');
+  createRadioInput(
+    name: string,
+    value: FilterState,
+    displayValue: string
+  ): HTMLDivElement {
+    const wrapper = document.createElement("div");
 
-    const input = document.createElement('input');
-    input.setAttribute('type', 'radio');
-    input.setAttribute('name', name);
+    const input = document.createElement("input");
+    input.setAttribute("type", "radio");
+    input.setAttribute("name", name);
 
-    input.setAttribute('id', value);
-    input.setAttribute('value', value);
+    input.setAttribute("id", value);
+    input.setAttribute("value", value);
 
     const checked = value === this.filterState;
 
@@ -142,14 +162,14 @@ class RateYourMusicBoldFilter {
       input.checked = true;
     }
 
-    input.addEventListener('click', (ev: Event) => {
+    input.addEventListener("click", (ev: Event) => {
       const state = (ev.target as HTMLInputElement).value as FilterState;
       this.refilter(state);
       GM.setValue(FILTER_STATE_KEY, state);
     });
 
-    const label = document.createElement('label');
-    label.setAttribute('for', value);
+    const label = document.createElement("label");
+    label.setAttribute("for", value);
 
     label.textContent = displayValue;
 
@@ -157,6 +177,14 @@ class RateYourMusicBoldFilter {
     wrapper.appendChild(label);
 
     return wrapper;
+  }
+
+  createShowPlaceholderCheckbox(): HTMLInputElement {
+    const input = document.createElement("input");
+    input.setAttribute("id", SHOW_PLACEHOLDER_CHECKBOX_ID);
+    input.setAttribute("type", "checkbox");
+
+    return input;
   }
 
   isBold(release: HTMLDivElement): boolean {
@@ -168,12 +196,18 @@ class RateYourMusicBoldFilter {
   }
 
   getReleases(): HTMLDivElement[] {
-    return [...document.querySelectorAll(`.${RELEASE_CLASS}`)] as HTMLDivElement[];
+    return [
+      ...document.querySelectorAll(`.${RELEASE_CLASS}`),
+    ] as HTMLDivElement[];
   }
 
-  applyClass(element: HTMLElement, condition: boolean, className: string): void {
+  applyClass(
+    element: HTMLElement,
+    condition: boolean,
+    className: string
+  ): void {
     if (condition) {
-      element.classList.add(className)
+      element.classList.add(className);
     } else {
       element.classList.remove(className);
     }
@@ -187,14 +221,16 @@ class RateYourMusicBoldFilter {
   }
 
   filterUnbolds(releases: HTMLDivElement[]): void {
-    releases.forEach(release => {
+    releases.forEach((release) => {
       const shouldHide = this.isBold(release);
       this.applyClass(release, shouldHide, FILTERED_CLASS);
     });
   }
 
   unfilter(): void {
-    this.getReleases().forEach(release => release.classList.remove(FILTERED_CLASS));
+    this.getReleases().forEach((release) =>
+      release.classList.remove(FILTERED_CLASS)
+    );
   }
 
   refilter(filterState: FilterState): void {
@@ -202,7 +238,7 @@ class RateYourMusicBoldFilter {
 
     const releases = this.getReleases();
 
-    switch(filterState) {
+    switch (filterState) {
       case FilterState.BoldOnly:
         this.filterBolds(releases);
         break;
@@ -212,12 +248,24 @@ class RateYourMusicBoldFilter {
         break;
 
       default:
-        // do nothing
+      // do nothing
     }
 
-    const fakeChartItem = document.querySelector(`.${FAKE_CHART_ITEM_CLASS}`) as HTMLDivElement;
-    const showFakeChartItem = releases.every(release => release.classList.contains(FILTERED_CLASS) || release.classList.contains(FAKE_CHART_ITEM_CLASS));
-    this.applyClass(fakeChartItem, showFakeChartItem, FORCE_DISPLAY_BLOCK_CLASS);
+    const fakeChartItem = document.querySelector(
+      `.${FAKE_CHART_ITEM_CLASS}`
+    ) as HTMLDivElement;
+
+    const showFakeChartItem = releases.every(
+      (release) =>
+        release.classList.contains(FILTERED_CLASS) ||
+        release.classList.contains(FAKE_CHART_ITEM_CLASS)
+    );
+
+    this.applyClass(
+      fakeChartItem,
+      showFakeChartItem,
+      FORCE_DISPLAY_BLOCK_CLASS
+    );
   }
 
   async main(): Promise<void> {
