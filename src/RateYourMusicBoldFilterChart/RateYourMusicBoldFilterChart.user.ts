@@ -14,6 +14,8 @@ const FILTER_STATE_KEY = "folderol_filter_state";
 const FAKE_CHART_ITEM_CLASS = "folderol_fake_chart_item";
 const FORCE_DISPLAY_BLOCK_CLASS = "folderol_force_display_block";
 const SHOW_PLACEHOLDER_CHECKBOX_ID = "folderol_show_placeholder";
+const PLACEHOLDER_KEY = 'folderol_placeholder_key';
+const SHOW_PLACEHOLDER_CLASS = "folderol_placeholders";
 
 enum FilterState {
   Off = "off",
@@ -23,6 +25,7 @@ enum FilterState {
 
 class RateYourMusicBoldFilter {
   private filterState: FilterState = FilterState.Off;
+  private showPlaceholders: boolean = false;
 
   // puts all of the styles on the page that we need for the rest of the script
   addStyles() {
@@ -47,6 +50,23 @@ class RateYourMusicBoldFilter {
 
         .${FORCE_DISPLAY_BLOCK_CLASS} {
           display: block !important;
+        }
+
+        .${SHOW_PLACEHOLDER_CLASS} .${FILTERED_CLASS} {
+          display: block;
+        }
+
+        .${SHOW_PLACEHOLDER_CLASS} .${FILTERED_CLASS} .object_release > *:not(.number_main) {
+          display: none;
+        }
+
+        .${SHOW_PLACEHOLDER_CLASS} .${FILTERED_CLASS} .object_release:after {
+          content: 'Hidden by Bold Filter';
+          font-style: italic;
+        }
+
+        .${SHOW_PLACEHOLDER_CLASS} .${FAKE_CHART_ITEM_CLASS} {
+          display: none;
         }
     `);
   }
@@ -104,14 +124,7 @@ class RateYourMusicBoldFilter {
 
     const callback: MutationCallback = () => {
       this.createFakeChartItem();
-
-      const checked = document.querySelector(
-        `input[name=${RADIO_GROUP_NAME}]:checked`
-      ) as HTMLInputElement;
-
-      if (checked) {
-        this.refilter(checked.value as FilterState);
-      }
+      this.refilter(this.readFilterState());
     };
 
     const observer = new MutationObserver(callback);
@@ -179,12 +192,32 @@ class RateYourMusicBoldFilter {
     return wrapper;
   }
 
-  createShowPlaceholderCheckbox(): HTMLInputElement {
+  createShowPlaceholderCheckbox(): HTMLDivElement {
+    const wrapper = document.createElement('div');
+
     const input = document.createElement("input");
     input.setAttribute("id", SHOW_PLACEHOLDER_CHECKBOX_ID);
     input.setAttribute("type", "checkbox");
 
-    return input;
+    input.addEventListener('change', ev => {
+      const target = ev.target as HTMLInputElement;
+
+      this.showPlaceholders = target.checked;
+      GM.setValue(PLACEHOLDER_KEY, this.showPlaceholders);
+
+      this.refilter(this.readFilterState());
+    });
+
+    input.checked = this.showPlaceholders;
+
+    const label = document.createElement('label');
+    label.setAttribute('for', SHOW_PLACEHOLDER_CHECKBOX_ID);
+    label.textContent = 'Show Placeholders';
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(label);
+
+    return wrapper;
   }
 
   isBold(release: HTMLDivElement): boolean {
@@ -233,6 +266,14 @@ class RateYourMusicBoldFilter {
     );
   }
 
+  readFilterState(): FilterState {
+    const checked = document.querySelector(
+      `input[name=${RADIO_GROUP_NAME}]:checked`
+    ) as HTMLInputElement;
+
+    return checked?.value as FilterState ?? FilterState.Off;
+  }
+
   refilter(filterState: FilterState): void {
     this.unfilter();
 
@@ -255,7 +296,7 @@ class RateYourMusicBoldFilter {
       `.${FAKE_CHART_ITEM_CLASS}`
     ) as HTMLDivElement;
 
-    const showFakeChartItem = releases.every(
+    const showFakeChartItem = !this.showPlaceholders && releases.every(
       (release) =>
         release.classList.contains(FILTERED_CLASS) ||
         release.classList.contains(FAKE_CHART_ITEM_CLASS)
@@ -266,12 +307,17 @@ class RateYourMusicBoldFilter {
       showFakeChartItem,
       FORCE_DISPLAY_BLOCK_CLASS
     );
+
+    const releaseSection = document.getElementById(SECTION_ID) as HTMLElement;
+    
+    this.applyClass(releaseSection, this.showPlaceholders, SHOW_PLACEHOLDER_CLASS);
   }
 
   async main(): Promise<void> {
     this.addStyles();
 
     this.filterState = await GM.getValue(FILTER_STATE_KEY, FilterState.Off);
+    this.showPlaceholders = await GM.getValue(PLACEHOLDER_KEY, false);
     this.createContainer();
     this.createPaginationObserver();
     this.createFakeChartItem();
