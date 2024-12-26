@@ -3,6 +3,7 @@
 import { Metadata } from "userscript-metadata-generator";
 
 const metadata: Metadata = {
+    author: 'Folderol Software',
     name: 'Rate Your Music Chart bold filter',
     description: 'Adds a checkbox to RYM chart pages to show only bolded works',
     match: 'https://rateyourmusic.com/charts/*',
