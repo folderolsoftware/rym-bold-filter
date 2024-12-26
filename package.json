@@ -10,6 +10,7 @@
   "author": "",
   "license": "CC-BY-NC-ND-4.0",
   "devDependencies": {
+    "@types/tampermonkey": "^5.0.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "userscript-utils": "github:rrowe404/userscript-utils",
