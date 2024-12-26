@@ -5,6 +5,7 @@
 // @match         https://rateyourmusic.com/charts/*
 // @grant         GM.getValue
 // @grant         GM.setValue
+// @version       1.0.0
 // ==/UserScript==
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
@@ -91,7 +92,6 @@ class RateYourMusicBoldFilter {
                 parentNode === null || parentNode === void 0 ? void 0 : parentNode.insertBefore(wrapper, nextSibling);
             }
             else {
-                console.log('what');
                 parentNode === null || parentNode === void 0 ? void 0 : parentNode.appendChild(wrapper);
             }
         }
