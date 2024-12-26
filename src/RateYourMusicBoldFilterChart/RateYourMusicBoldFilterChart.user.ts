@@ -1,7 +1,7 @@
 import { createStylesheet } from "userscript-utils";
 
 const BOLD_CLASS = "is_bolded";
-const INSERT_CONTAINER_BEFORE_CLASS = "page_chart_query_become_subscriber";
+const INSERT_CONTAINER_AFTER_CLASS = "page_chart_settings_summary";
 const CHECKBOX_ID = "showOnlyBolds";
 const WRAPPER_ID = `${CHECKBOX_ID}_container`;
 const SECTION_ID = "page_charts_section_charts";
@@ -52,8 +52,8 @@ class RateYourMusicBoldFilter {
 
   createContainer(): void {
     const wrapper = document.createElement("div");
-    const insertBefore = document.querySelector(
-      "." + INSERT_CONTAINER_BEFORE_CLASS
+    const insertAfter = document.querySelector(
+      "." + INSERT_CONTAINER_AFTER_CLASS
     );
 
     wrapper.setAttribute("id", WRAPPER_ID);
@@ -66,9 +66,14 @@ class RateYourMusicBoldFilter {
     const radioGroup = this.createRadioGroup();
     wrapper.appendChild(radioGroup);
 
-    if (insertBefore) {
-      const { parentNode } = insertBefore;
-      parentNode?.insertBefore(wrapper, insertBefore);
+    if (insertAfter) {
+      const { parentNode, nextSibling } = insertAfter;
+
+      if (nextSibling) {
+        parentNode?.insertBefore(wrapper, nextSibling);
+      } else {
+        parentNode?.appendChild(wrapper);
+      }
     }
   }
 

@@ -5,6 +5,7 @@
 // @match         https://rateyourmusic.com/charts/*
 // @grant         GM.getValue
 // @grant         GM.setValue
+// @version       1.0.0
 // ==/UserScript==
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
@@ -29,7 +30,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 const BOLD_CLASS = "is_bolded";
-const INSERT_CONTAINER_BEFORE_CLASS = "page_chart_query_become_subscriber";
+const INSERT_CONTAINER_AFTER_CLASS = "page_chart_settings_summary";
 const CHECKBOX_ID = "showOnlyBolds";
 const WRAPPER_ID = `${CHECKBOX_ID}_container`;
 const SECTION_ID = "page_charts_section_charts";
@@ -78,16 +79,21 @@ class RateYourMusicBoldFilter {
     }
     createContainer() {
         const wrapper = document.createElement("div");
-        const insertBefore = document.querySelector("." + INSERT_CONTAINER_BEFORE_CLASS);
+        const insertAfter = document.querySelector("." + INSERT_CONTAINER_AFTER_CLASS);
         wrapper.setAttribute("id", WRAPPER_ID);
         const header = document.createElement('b');
         header.textContent = 'Bold Filter';
         wrapper.appendChild(header);
         const radioGroup = this.createRadioGroup();
         wrapper.appendChild(radioGroup);
-        if (insertBefore) {
-            const { parentNode } = insertBefore;
-            parentNode === null || parentNode === void 0 ? void 0 : parentNode.insertBefore(wrapper, insertBefore);
+        if (insertAfter) {
+            const { parentNode, nextSibling } = insertAfter;
+            if (nextSibling) {
+                parentNode === null || parentNode === void 0 ? void 0 : parentNode.insertBefore(wrapper, nextSibling);
+            }
+            else {
+                parentNode === null || parentNode === void 0 ? void 0 : parentNode.appendChild(wrapper);
+            }
         }
     }
     createFakeChartItem() {
