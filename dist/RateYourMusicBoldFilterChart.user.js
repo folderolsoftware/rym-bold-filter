@@ -110,12 +110,7 @@ class RateYourMusicBoldFilterChart {
         wrapper.appendChild(this.createShowPlaceholderCheckbox());
         if (insertAfter) {
             const { parentNode, nextSibling } = insertAfter;
-            if (nextSibling) {
-                parentNode === null || parentNode === void 0 ? void 0 : parentNode.insertBefore(wrapper, nextSibling);
-            }
-            else {
-                parentNode === null || parentNode === void 0 ? void 0 : parentNode.appendChild(wrapper);
-            }
+            parentNode === null || parentNode === void 0 ? void 0 : parentNode.insertBefore(wrapper, nextSibling);
         }
     }
     createFakeChartItem() {

@@ -83,12 +83,7 @@ class RateYourMusicBoldFilterChart {
 
     if (insertAfter) {
       const { parentNode, nextSibling } = insertAfter;
-
-      if (nextSibling) {
-        parentNode?.insertBefore(wrapper, nextSibling);
-      } else {
-        parentNode?.appendChild(wrapper);
-      }
+      parentNode?.insertBefore(wrapper, nextSibling);
     }
   }
 
