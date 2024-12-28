@@ -1,4 +1,5 @@
 import { createStylesheet } from "userscript-utils";
+import { FilterState } from "../FilterState/FilterState";
 
 const BOLD_CLASS = "is_bolded";
 const INSERT_CONTAINER_AFTER_CLASS = "page_charts_settings_summary";
@@ -17,13 +18,7 @@ const SHOW_PLACEHOLDER_CHECKBOX_ID = "folderol_show_placeholder";
 const PLACEHOLDER_KEY = 'folderol_placeholder_key';
 const SHOW_PLACEHOLDER_CLASS = "folderol_placeholders";
 
-enum FilterState {
-  Off = "off",
-  BoldOnly = "boldOnly",
-  NonBoldOnly = "nonBoldOnly",
-}
-
-class RateYourMusicBoldFilter {
+class RateYourMusicBoldFilterChart {
   private filterState: FilterState = FilterState.Off;
   private showPlaceholders: boolean = false;
 
@@ -88,12 +83,7 @@ class RateYourMusicBoldFilter {
 
     if (insertAfter) {
       const { parentNode, nextSibling } = insertAfter;
-
-      if (nextSibling) {
-        parentNode?.insertBefore(wrapper, nextSibling);
-      } else {
-        parentNode?.appendChild(wrapper);
-      }
+      parentNode?.insertBefore(wrapper, nextSibling);
     }
   }
 
@@ -321,6 +311,6 @@ class RateYourMusicBoldFilter {
   }
 }
 
-const instance = new RateYourMusicBoldFilter();
+const instance = new RateYourMusicBoldFilterChart();
 
 window.addEventListener("load", async () => await instance.main());

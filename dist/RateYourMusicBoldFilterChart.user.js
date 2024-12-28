@@ -18,6 +18,14 @@ function createStylesheet(styles) {
     return stylesheet;
 }
 
+;// ./src/FilterState/FilterState.ts
+var FilterState;
+(function (FilterState) {
+    FilterState["Off"] = "off";
+    FilterState["BoldOnly"] = "boldOnly";
+    FilterState["NonBoldOnly"] = "nonBoldOnly";
+})(FilterState || (FilterState = {}));
+
 ;// ./src/RateYourMusicBoldFilterChart/RateYourMusicBoldFilterChart.user.ts
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -28,6 +36,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 const BOLD_CLASS = "is_bolded";
 const INSERT_CONTAINER_AFTER_CLASS = "page_charts_settings_summary";
@@ -44,13 +53,7 @@ const FORCE_DISPLAY_BLOCK_CLASS = "folderol_force_display_block";
 const SHOW_PLACEHOLDER_CHECKBOX_ID = "folderol_show_placeholder";
 const PLACEHOLDER_KEY = 'folderol_placeholder_key';
 const SHOW_PLACEHOLDER_CLASS = "folderol_placeholders";
-var FilterState;
-(function (FilterState) {
-    FilterState["Off"] = "off";
-    FilterState["BoldOnly"] = "boldOnly";
-    FilterState["NonBoldOnly"] = "nonBoldOnly";
-})(FilterState || (FilterState = {}));
-class RateYourMusicBoldFilter {
+class RateYourMusicBoldFilterChart {
     constructor() {
         this.filterState = FilterState.Off;
         this.showPlaceholders = false;
@@ -107,12 +110,7 @@ class RateYourMusicBoldFilter {
         wrapper.appendChild(this.createShowPlaceholderCheckbox());
         if (insertAfter) {
             const { parentNode, nextSibling } = insertAfter;
-            if (nextSibling) {
-                parentNode === null || parentNode === void 0 ? void 0 : parentNode.insertBefore(wrapper, nextSibling);
-            }
-            else {
-                parentNode === null || parentNode === void 0 ? void 0 : parentNode.appendChild(wrapper);
-            }
+            parentNode === null || parentNode === void 0 ? void 0 : parentNode.insertBefore(wrapper, nextSibling);
         }
     }
     createFakeChartItem() {
@@ -262,7 +260,7 @@ class RateYourMusicBoldFilter {
         });
     }
 }
-const instance = new RateYourMusicBoldFilter();
+const instance = new RateYourMusicBoldFilterChart();
 window.addEventListener("load", () => __awaiter(void 0, void 0, void 0, function* () { return yield instance.main(); }));
 
 /******/ })()
